@@ -1,0 +1,55 @@
+download:
+
+############################
+
+#!/bin/csh -f
+
+mkdir fastqs
+
+sed 1d GSE58377.txt | awk '{print $2}' > SRR.name.txt
+
+foreach i ("`cat SRR.name.txt`")
+
+set ii =  `echo $i | cut -c1-6`
+
+/home/exx/.aspera/connect/bin/ascp -i \
+/home/exx/.aspera/connect/etc/asperaweb_id_dsa.openssh -k 1 -QT -l 200m \
+ anonftp@ftp-trace.ncbi.nlm.nih.gov:/sra/sra-instant/reads/ByRun/sra/SRR/$ii/$i/$i.sra fastqs
+
+end
+##############################33
+	
+  save following as GSE58377.txt 
+  
+BCC1-control SRR1374314	
+BCC1-tumor SRR1374315
+BCC2-tumor SRR1374316
+BCC2_3-control SRR1374317
+
+
+###########################
+
+find *sra| parallel -j 4 fastq-dump --split-3 {}
+find *fastq | parallel -j 8 bgzip {}
+
+save  following as samples.tsv
+
+sample
+BCC1-control
+BCC1-tumor
+BCC2-tumor
+BCC2_3-control
+
+save  following as units.tsv
+sample	unit	platform	fq1	fq2
+BCC1-control   lane  ILLUMINA  download_fastq/fastqs/SRR1374314_1.fastq.gz download_fastq/fastqs/SRR1374314_2.fastq.gz 
+BCC1-tumor     lane  ILLUMINA  download_fastq/fastqs/SRR1374315_1.fastq.gz download_fastq/fastqs/SRR1374315_2.fastq.gz
+BCC2-tumor     lane  ILLUMINA  download_fastq/fastqs/SRR1374316_1.fastq.gz download_fastq/fastqs/SRR1374316_2.fastq.gz
+BCC2_3-control lane  ILLUMINA  download_fastq/fastqs/SRR1374317_1.fastq.gz download_fastq/fastqs/SRR1374317_2.fastq.gz
+
+reference genome
+wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/VCF/All_20180418.vcf.gz
+wget ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz
+samtools faidx GRCh38_latest_genomic.fna
+
+
