@@ -51,5 +51,8 @@ reference genome
 wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/VCF/All_20180418.vcf.gz
 wget ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz
 samtools faidx GRCh38_latest_genomic.fna
+bwa index GRCh38_latest_genomic.fna
+
+snakemake --cores 16 --rerun-incomplete
 
 
