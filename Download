@@ -49,10 +49,31 @@ BCC2_3-control lane  ILLUMINA  download_fastq/fastqs/SRR1374317_1.fastq.gz downl
 
 reference genome
 wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/VCF/All_20180418.vcf.gz
-wget ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz
-samtools faidx GRCh38_latest_genomic.fna
-bwa index GRCh38_latest_genomic.fna
+gatk IndexFeatureFile -F All_20180418.vcf
 
+wget ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.fna.gz
+mv GRCh38_latest_genomic.fna.gz GRCh38_latest_genomic.fasta.gz
+
+java -jar /root/miniconda3/pkgs/picard-2.18.16-0/share/picard-2.18.16-0/picard.jar CreateSequenceDictionary R= GRCh38_latest_genomic.fasta O= GRCh38_latest_genomic.dict
+samtools faidx GRCh38_latest_genomic.fasta
+bwa index GRCh38_latest_genomic.fasta
+
+
+
+java -Dsamjdk.use_async_io_read_samtools=false -Dsamjdk.use_async_io_write_samtools=true \ 
+-Dsamjdk.use_async_io_write_tribble=false -Dsamjdk.compression_level=2 -jar \
+/root/miniconda3/share/gatk4-4.0.11.0-0/gatk-package-4.0.11.0-local.jar BaseRecalibrator \
+-R /data/exx/DNAseq/dna-seq-gatk-variant-calling/vcf/GRCh38_latest_genomic.fasta \
+-I dedup/BCC1-control-lane1.bam -O /tmp/tmp7sdq7f_8/recal_table.grp --known-sites \
+/data/exx/DNAseq/dna-seq-gatk-variant-calling/vcf/All_20180418.vcf
+
+
+conda install -c bioconda bwa
+conda install -c bioconda picard
+conda install -c bioconda gatk4
+
+ 
+snakemake --unlock
 snakemake --cores 16 --rerun-incomplete
 
 
