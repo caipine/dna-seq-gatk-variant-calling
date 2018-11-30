@@ -1,0 +1,28 @@
+save following as GSE58377
+
+GSM1409314      DNASeq-BCC1-control
+GSM1409315      DNASeq-BCC1-tumor
+GSM1409316      DNASeq-BCC2-tumor
+GSM1409317      DNASeq-BCC2_3-control
+GSM1409318      DNASeq-BCC3-tumor
+GSM1409319      DNASeq-BCC4-tumor
+GSM1409320      DNASeq-BCC4_5-control
+GSM1409321      DNASeq-BCC5-tumor
+GSM1409322      DNASeq-BCC9-control
+GSM1409323      DNASeq-BCC9-tumor
+GSM1409324      DNASeq-BCC10-control
+GSM1409325      DNASeq-BCC10-tumor
+GSM1409326      DNASeq-BCC11-control
+GSM1409327      DNASeq-BCC11-tumor
+GSM1409328      DNASeq-BCC12-control
+GSM1409329      DNASeq-BCC12-tumor
+GSM1409330      DNASeq-BCC13-control
+GSM1409331      DNASeq-BCC13-tumor
+GSM1409332      DNASeq-BCC14-control
+GSM1409333      DNASeq-BCC14-tumor
+
+
+
+cat GSE58377 | cut -c20-33 > tmp1
+cat GSE58377 | cut -c1-10 > tmp2
+sed -i 's/GSM1409/SRR1374/g' tmp2
