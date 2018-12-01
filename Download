@@ -60,6 +60,15 @@ bwa index GRCh38_latest_genomic.fasta
 
 
 
+
+java -jar /home/qcai1/miniconda3/pkgs/picard-2.18.16-0/share/picard-2.18.16-0/picard.jar CreateSequenceDictionary \
+      R= Homo_sapiens_assembly38.fasta O= Homo_sapiens_assembly38.dict
+samtools faidx Homo_sapiens_assembly38.fasta
+bwa index Homo_sapiens_assembly38.fasta
+
+
+
+
 java -Dsamjdk.use_async_io_read_samtools=false -Dsamjdk.use_async_io_write_samtools=true \ 
 -Dsamjdk.use_async_io_write_tribble=false -Dsamjdk.compression_level=2 -jar \
 /root/miniconda3/share/gatk4-4.0.11.0-0/gatk-package-4.0.11.0-local.jar BaseRecalibrator \
