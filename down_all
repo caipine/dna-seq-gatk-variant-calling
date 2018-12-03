@@ -26,3 +26,32 @@ GSM1409333      DNASeq-BCC14-tumor
 cat GSE58377 | cut -c20-33 > tmp1
 cat GSE58377 | cut -c1-10 > tmp2
 sed -i 's/GSM1409/SRR1374/g' tmp2
+
+
+wget -qO- https://download.asperasoft.com/download/sw/connect/3.8.1/ibm-aspera-connect-3.8.1.161274-linux-g2.12-64.tar.gz | tar xvz
+chmod +x ibm-aspera-connect-3.8.1.161274-linux-g2.12-64.sh
+./ibm-aspera-connect-3.8.1.161274-linux-g2.12-64.sh
+export PATH=$PATH:/opt/tacc_mounts/home1/03988/qscai/.aspera/connect/bin/
+echo 'export PATH=$PATH:/opt/tacc_mounts/home1/03988/qscai/.aspera/connect/bin/' >> /opt/tacc_mounts/home1/03988/qscai/.bashrc
+
+/home1/03988/qscai/.aspera/connect/bin
+nano /opt/tacc_mounts/home1/03988/qscai/.bashrc
+
+download.sh
+###################
+#!/bin/csh -f
+
+mkdir fastqs
+
+#sed 1d GSE58377.txt | awk '{print $2}' > SRR.name.txt
+
+foreach i ("`cat tmp2`")
+  echo $i
+   set ii =  `echo $i | cut -c1-6`
+
+ ascp -i /opt/tacc_mounts/home1/03988/qscai/.aspera/connect/etc/asperaweb_id_dsa.openssh \
+      -k 1 -QT -l 200m anonftp@ftp-trace.ncbi.nlm.nih.gov:/sra/sra-instant/reads/ByRun/sra/SRR/$ii/$i/$i.sra fastqs
+
+end
+
+
