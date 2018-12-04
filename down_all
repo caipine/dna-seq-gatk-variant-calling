@@ -26,3 +26,25 @@ GSM1409333      DNASeq-BCC14-tumor
 cat GSE58377 | cut -c20-33 > tmp1
 cat GSE58377 | cut -c1-10 > tmp2
 sed -i 's/GSM1409/SRR1374/g' tmp2
+
+
+
+
+
+
+
+
+
+gatk-launch  PreprocessIntervals \
+    -R /data/exx/DNAseq/test/vcf/ucsc.hg19.fasta \
+    --bin-length 0 \
+    --interval-merging-rule OVERLAPPING_ONLY \
+    -O sandbox/targets_C.preprocessed.interval_list
+    
+gatk-launch  CollectFragmentCounts \
+    -I tumor.bam \
+    -L targets_C.preprocessed.interval_list \
+    --interval-merging-rule OVERLAPPING_ONLY \
+    -O sandbox/tumor.counts.hdf5
+
+
